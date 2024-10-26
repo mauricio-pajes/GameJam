@@ -1,0 +1,288 @@
+#pragma once
+
+#include "Carro.h"
+#include <vector>
+#include <ctime>
+#include <cstdlib>
+
+using namespace std;
+
+namespace GameJam {
+
+    using namespace System;
+    using namespace System::ComponentModel;
+    using namespace System::Windows::Forms;
+    using namespace System::Drawing;
+
+    public ref class CarreraForm : public System::Windows::Forms::Form
+    {
+    public:
+        CarreraForm(void)
+        {
+            InitializeComponent();
+
+            carros = new vector<Carro*>();
+            ordenLlegada = new vector<Carro*>();
+            carreraEnCurso = true;
+            totalCarrosLlegados = 0;
+        }
+
+    protected:
+        ~CarreraForm()
+        {
+            if (components)
+            {
+                delete components;
+            }
+
+            // Liberar memoria de los carros
+            for (int i = 0; i < carros->size(); i++)
+            {
+                delete (*carros)[i];
+            }
+            delete carros;
+            delete ordenLlegada;
+        }
+
+    private:
+        System::ComponentModel::Container^ components;
+        System::Windows::Forms::Label^ etiquetaCronometro;
+        System::Windows::Forms::Timer^ cronometroTimer;
+
+        // Nuevos controles
+        System::Windows::Forms::Label^ etiquetaResultado1;
+        System::Windows::Forms::Label^ etiquetaResultado2;
+        System::Windows::Forms::Label^ etiquetaResultado3;
+        System::Windows::Forms::Button^ botonReiniciar;
+
+        double segundos;
+
+        vector<Carro*>* carros;
+        vector<Carro*>* ordenLlegada;
+        bool carreraEnCurso;
+        int totalCarrosLlegados;
+        int metaX;
+
+#pragma region Windows Form Designer generated code
+        void InitializeComponent(void)
+        {
+            this->etiquetaCronometro = (gcnew System::Windows::Forms::Label());
+            this->cronometroTimer = (gcnew System::Windows::Forms::Timer());
+            this->etiquetaResultado1 = (gcnew System::Windows::Forms::Label());
+            this->etiquetaResultado2 = (gcnew System::Windows::Forms::Label());
+            this->etiquetaResultado3 = (gcnew System::Windows::Forms::Label());
+            this->botonReiniciar = (gcnew System::Windows::Forms::Button());
+            this->SuspendLayout();
+
+
+            this->etiquetaCronometro->AutoSize = true;
+            this->etiquetaCronometro->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 16));
+            this->etiquetaCronometro->Location = System::Drawing::Point(10, 10);
+            this->etiquetaCronometro->Name = L"etiquetaCronometro";
+            this->etiquetaCronometro->Size = System::Drawing::Size(70, 25);
+            this->etiquetaCronometro->TabIndex = 0;
+            this->etiquetaCronometro->Text = L"00.00";
+
+            
+            this->etiquetaResultado1->AutoSize = true;
+            this->etiquetaResultado1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12));
+            this->etiquetaResultado1->Location = System::Drawing::Point(10, 50);
+            this->etiquetaResultado1->Name = L"etiquetaResultado1";
+            this->etiquetaResultado1->Size = System::Drawing::Size(0, 20);
+            this->etiquetaResultado1->TabIndex = 1;
+            this->etiquetaResultado1->Text = L"";
+
+
+            this->etiquetaResultado2->AutoSize = true;
+            this->etiquetaResultado2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12));
+            this->etiquetaResultado2->Location = System::Drawing::Point(10, 80);
+            this->etiquetaResultado2->Name = L"etiquetaResultado2";
+            this->etiquetaResultado2->Size = System::Drawing::Size(0, 20);
+            this->etiquetaResultado2->TabIndex = 2;
+            this->etiquetaResultado2->Text = L"";
+
+
+            this->etiquetaResultado3->AutoSize = true;
+            this->etiquetaResultado3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12));
+            this->etiquetaResultado3->Location = System::Drawing::Point(10, 110);
+            this->etiquetaResultado3->Name = L"etiquetaResultado3";
+            this->etiquetaResultado3->Size = System::Drawing::Size(0, 20);
+            this->etiquetaResultado3->TabIndex = 3;
+            this->etiquetaResultado3->Text = L"";
+
+           
+            this->botonReiniciar->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12));
+            this->botonReiniciar->Location = System::Drawing::Point(700, 10);
+            this->botonReiniciar->Name = L"botonReiniciar";
+            this->botonReiniciar->Size = System::Drawing::Size(90, 30);
+            this->botonReiniciar->TabIndex = 4;
+            this->botonReiniciar->Text = L"Reiniciar";
+            this->botonReiniciar->UseVisualStyleBackColor = true;
+            this->botonReiniciar->Click += gcnew System::EventHandler(this, &CarreraForm::botonReiniciar_Click);
+
+
+            this->cronometroTimer->Interval = 10;
+            this->cronometroTimer->Tick += gcnew System::EventHandler(this, &CarreraForm::cronometroTimer_Tick);
+
+
+            this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
+            this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+            this->ClientSize = System::Drawing::Size(800, 400);
+            this->Controls->Add(this->botonReiniciar);
+            this->Controls->Add(this->etiquetaResultado3);
+            this->Controls->Add(this->etiquetaResultado2);
+            this->Controls->Add(this->etiquetaResultado1);
+            this->Controls->Add(this->etiquetaCronometro);
+            this->Name = L"CarreraForm";
+            this->Text = L"Carrera de Autos";
+            this->Load += gcnew System::EventHandler(this, &CarreraForm::CarreraForm_Load);
+            this->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &CarreraForm::CarreraForm_Paint);
+            this->ResumeLayout(false);
+            this->PerformLayout();
+        }
+#pragma endregion
+
+    private:
+        void CarreraForm_Load(Object^ sender, EventArgs^ e)
+        {
+            IniciarCarrera();
+        }
+
+        void IniciarCarrera()
+        {
+
+            srand(time(0));
+
+            segundos = 0.0;
+            etiquetaCronometro->Text = "00.00";
+            carreraEnCurso = true;
+            totalCarrosLlegados = 0;
+
+            for (int i = 0; i < carros->size(); i++)
+            {
+                delete (*carros)[i];
+            }
+            carros->clear();
+            ordenLlegada->clear();
+
+            etiquetaResultado1->Text = "";
+            etiquetaResultado2->Text = "";
+            etiquetaResultado3->Text = "";
+
+            metaX = this->ClientSize.Width - 100;
+
+            carros->push_back(new Carro(50, 100, 255, 0, 0));
+            carros->push_back(new Carro(50, 150, 0, 255, 0));
+            carros->push_back(new Carro(50, 200, 0, 0, 255));
+
+            cronometroTimer->Start();
+
+            this->Invalidate();
+        }
+
+        void cronometroTimer_Tick(Object^ sender, EventArgs^ e)
+        {
+            if (carreraEnCurso)
+            {
+                segundos += 0.01;
+
+                int totalSegundos = segundos;
+                int centesimas = (segundos - totalSegundos) * 100;
+
+                etiquetaCronometro->Text = String::Format("{0:D2}.{1:D2}", totalSegundos, centesimas);
+
+                for (int i = 0; i < carros->size(); i++)
+                {
+                    Carro* car = (*carros)[i];
+
+                    if (!car->haLlegado)
+                    {
+                        car->Mover();
+                        if (car->HaLlegado(metaX))
+                        {
+                            car->haLlegado = true;
+                            car->tiempoLlegada = segundos;
+                            totalCarrosLlegados++;
+
+                            ordenLlegada->push_back(car);
+
+                            if (totalCarrosLlegados == carros->size())
+                            {
+                                carreraEnCurso = false;
+                                cronometroTimer->Stop();
+
+                                MostrarResultados();
+                            }
+                        }
+                    }
+                }
+
+                this->Invalidate();
+            }
+        }
+
+        void MostrarResultados()
+        {
+            for (int i = 0; i < ordenLlegada->size(); i++)
+            {
+                Carro* car = (*ordenLlegada)[i];
+                String^ colorCarro;
+
+                if (car->colorR == 255)
+                    colorCarro = "Rojo";
+                else if (car->colorG == 255)
+                    colorCarro = "Verde";
+                else if (car->colorB == 255)
+                    colorCarro = "Azul";
+                else
+                    colorCarro = "Desconocido";
+
+                String^ mensaje = String::Format("{0}º Lugar - Carro {1}: {2:F2} segundos", i + 1, colorCarro, car->tiempoLlegada);
+
+                Label^ etiquetaResultado;
+
+                if (i == 0)
+                    etiquetaResultado = etiquetaResultado1;
+                else if (i == 1)
+                    etiquetaResultado = etiquetaResultado2;
+                else if (i == 2)
+                    etiquetaResultado = etiquetaResultado3;
+                else
+                    continue;
+
+                etiquetaResultado->Text = mensaje;
+
+                if (i == 0)
+                    etiquetaResultado->ForeColor = Color::Green;
+                else if (i == 1)
+                    etiquetaResultado->ForeColor = Color::Black;
+                else if (i == 2)
+                    etiquetaResultado->ForeColor = Color::Red;
+            }
+        }
+
+        void botonReiniciar_Click(Object^ sender, EventArgs^ e)
+        {
+            IniciarCarrera();
+        }
+
+        void CarreraForm_Paint(Object^ sender, PaintEventArgs^ e)
+        {
+            Graphics^ g = e->Graphics;
+
+            Pen^ penMeta = gcnew Pen(Color::Black, 3);
+            g->DrawLine(penMeta, metaX, 0, metaX, this->ClientSize.Height);
+            delete penMeta;
+
+            for (int i = 0; i < carros->size(); i++)
+            {
+                Carro* car = (*carros)[i];
+                Color carColor = Color::FromArgb(car->colorR, car->colorG, car->colorB);
+                SolidBrush^ brush = gcnew SolidBrush(carColor);
+                g->FillEllipse(brush, car->x, car->y, 30, 30);
+                delete brush;
+            }
+        }
+    };
+}
+

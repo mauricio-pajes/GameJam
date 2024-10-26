@@ -1,4 +1,5 @@
 #pragma once
+#include "CarreraForm.h"
 
 namespace GameJam {
 
@@ -60,6 +61,7 @@ namespace GameJam {
             this->botonCarrera->TabIndex = 0;
             this->botonCarrera->Text = L"Carrera :D";
             this->botonCarrera->UseVisualStyleBackColor = true;
+            this->botonCarrera->Click += gcnew System::EventHandler(this, &MyForm::botonCarrera_Click);
 
             // 
             // botonGenerarCarritos
@@ -86,5 +88,13 @@ namespace GameJam {
             this->PerformLayout();
         }
 #pragma endregion
+
+    private:
+        void botonCarrera_Click(Object^ sender, EventArgs^ e)
+        {
+            // Crear una instancia del formulario CarreraForm y mostrarla
+            CarreraForm^ carreraForm = gcnew CarreraForm();
+            carreraForm->Show();
+        }
     };
 }
