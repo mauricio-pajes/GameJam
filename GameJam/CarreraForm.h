@@ -6,6 +6,8 @@
 #include <vector>
 #include <ctime>
 #include <cstdlib>
+#include "CarroContexto.h"
+
 using namespace std;
 
 namespace GameJam {
@@ -20,10 +22,19 @@ namespace GameJam {
         CarreraForm(void)
         {
             InitializeComponent();
+
             carros = new vector<Carro*>();
             ordenLlegada = new vector<Carro*>();
             carreraEnCurso = true;
             totalCarrosLlegados = 0;
+            metaX = this->ClientSize.Width - 100;
+
+            // Crear los tres carros iniciales con contexto de Carrera
+            carros->push_back(new Carro1(50, 100, CarroContexto::Carrera));
+            carros->push_back(new Carro2(50, 150, CarroContexto::Carrera));
+            carros->push_back(new Carro3(50, 200, CarroContexto::Carrera));
+
+            cronometroTimer->Start();
         }
 
     protected:
@@ -52,9 +63,8 @@ namespace GameJam {
         Button^ botonReiniciar;
 
         double segundos;
-
-        std::vector<Carro*>* carros;
-        std::vector<Carro*>* ordenLlegada;
+        vector<Carro*>* carros;
+        vector<Carro*>* ordenLlegada;
         bool carreraEnCurso;
         int totalCarrosLlegados;
         int metaX;
@@ -69,6 +79,9 @@ namespace GameJam {
             this->botonReiniciar = (gcnew System::Windows::Forms::Button());
             this->SuspendLayout();
 
+            // 
+            // etiquetaCronometro
+            // 
             this->etiquetaCronometro->AutoSize = true;
             this->etiquetaCronometro->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 16));
             this->etiquetaCronometro->Location = System::Drawing::Point(10, 10);
@@ -77,6 +90,9 @@ namespace GameJam {
             this->etiquetaCronometro->TabIndex = 0;
             this->etiquetaCronometro->Text = L"00.00";
 
+            // 
+            // etiquetaResultado1
+            // 
             this->etiquetaResultado1->AutoSize = true;
             this->etiquetaResultado1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12));
             this->etiquetaResultado1->Location = System::Drawing::Point(10, 50);
@@ -85,6 +101,9 @@ namespace GameJam {
             this->etiquetaResultado1->TabIndex = 1;
             this->etiquetaResultado1->Text = L"";
 
+            // 
+            // etiquetaResultado2
+            // 
             this->etiquetaResultado2->AutoSize = true;
             this->etiquetaResultado2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12));
             this->etiquetaResultado2->Location = System::Drawing::Point(10, 80);
@@ -93,6 +112,9 @@ namespace GameJam {
             this->etiquetaResultado2->TabIndex = 2;
             this->etiquetaResultado2->Text = L"";
 
+            // 
+            // etiquetaResultado3
+            // 
             this->etiquetaResultado3->AutoSize = true;
             this->etiquetaResultado3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12));
             this->etiquetaResultado3->Location = System::Drawing::Point(10, 110);
@@ -101,6 +123,9 @@ namespace GameJam {
             this->etiquetaResultado3->TabIndex = 3;
             this->etiquetaResultado3->Text = L"";
 
+            // 
+            // botonReiniciar
+            // 
             this->botonReiniciar->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12));
             this->botonReiniciar->Location = System::Drawing::Point(700, 10);
             this->botonReiniciar->Name = L"botonReiniciar";
@@ -110,9 +135,15 @@ namespace GameJam {
             this->botonReiniciar->UseVisualStyleBackColor = true;
             this->botonReiniciar->Click += gcnew System::EventHandler(this, &CarreraForm::botonReiniciar_Click);
 
-            this->cronometroTimer->Interval = 10;
+            // 
+            // cronometroTimer
+            // 
+            this->cronometroTimer->Interval = 10; // 10 ms para 0.01 segundos
             this->cronometroTimer->Tick += gcnew System::EventHandler(this, &CarreraForm::cronometroTimer_Tick);
 
+            // 
+            // CarreraForm
+            // 
             this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
             this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
             this->ClientSize = System::Drawing::Size(800, 400);
@@ -129,14 +160,14 @@ namespace GameJam {
             this->PerformLayout();
         }
 
-        void CarreraForm::CarreraForm_Load(Object^ sender, EventArgs^ e)
+        void CarreraForm_Load(Object^ sender, EventArgs^ e)
         {
-            IniciarCarrera();
+            // Inicializar variables si es necesario
         }
 
-        void CarreraForm::IniciarCarrera()
+        void IniciarCarrera()
         {
-            srand(time(0));
+            srand(static_cast<unsigned int>(time(0)));
             segundos = 0.0;
             etiquetaCronometro->Text = "00.00";
             carreraEnCurso = true;
@@ -155,21 +186,21 @@ namespace GameJam {
 
             metaX = this->ClientSize.Width - 100;
 
-            carros->push_back(new Carro1(50, 100));
-            carros->push_back(new Carro2(50, 150));
-            carros->push_back(new Carro3(50, 200));
+            carros->push_back(new Carro1(50, 100, CarroContexto::Carrera));
+            carros->push_back(new Carro2(50, 150, CarroContexto::Carrera));
+            carros->push_back(new Carro3(50, 200, CarroContexto::Carrera));
 
             cronometroTimer->Start();
             this->Invalidate();
         }
 
-        void CarreraForm::cronometroTimer_Tick(Object^ sender, EventArgs^ e)
+        void cronometroTimer_Tick(Object^ sender, EventArgs^ e)
         {
             if (carreraEnCurso)
             {
                 segundos += 0.01;
-                int totalSegundos = segundos;
-                int centesimas = (segundos - totalSegundos) * 100;
+                int totalSegundos = static_cast<int>(segundos);
+                int centesimas = static_cast<int>((segundos - totalSegundos) * 100);
                 etiquetaCronometro->Text = String::Format("{0:D2}.{1:D2}", totalSegundos, centesimas);
 
                 for (int i = 0; i < carros->size(); i++)
@@ -177,7 +208,7 @@ namespace GameJam {
                     Carro* car = (*carros)[i];
                     if (!car->haLlegado)
                     {
-                        car->Mover();
+                        car->Mover(); // Método unificado que se comporta según el contexto
                         if (car->HaLlegado(metaX))
                         {
                             car->haLlegado = true;
@@ -197,7 +228,7 @@ namespace GameJam {
             }
         }
 
-        void CarreraForm::MostrarResultados()
+        void MostrarResultados()
         {
             for (int i = 0; i < ordenLlegada->size(); i++)
             {
@@ -223,12 +254,12 @@ namespace GameJam {
             }
         }
 
-        void CarreraForm::botonReiniciar_Click(Object^ sender, EventArgs^ e)
+        void botonReiniciar_Click(Object^ sender, EventArgs^ e)
         {
             IniciarCarrera();
         }
 
-        void CarreraForm::CarreraForm_Paint(Object^ sender, PaintEventArgs^ e)
+        void CarreraForm_Paint(Object^ sender, PaintEventArgs^ e)
         {
             Graphics^ g = e->Graphics;
             Pen^ penMeta = gcnew Pen(Color::Black, 3);
