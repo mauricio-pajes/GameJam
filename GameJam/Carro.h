@@ -1,7 +1,5 @@
 #pragma once
-
-#include <cstdlib>
-
+#include <string>
 using namespace std;
 
 class Carro
@@ -16,6 +14,8 @@ public:
     double tiempoLlegada;
 
     Carro(int startX, int startY, int r, int g, int b);
+    virtual ~Carro();
+    virtual string GetColorName() const;
     void Mover();
     bool HaLlegado(int metaX);
 };
