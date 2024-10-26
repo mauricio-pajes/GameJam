@@ -1,4 +1,3 @@
-// Carro.h
 #pragma once
 #include <string>
 #include "CarroContexto.h"
@@ -34,6 +33,6 @@ public:
     void Mover();
 
     bool HaLlegado(int metaX);
-    void Rebotar();
+    void Rebotar(bool invertirX, bool invertirY);
     bool ChocaCon(Carro* otro);
 };

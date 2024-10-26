@@ -1,14 +1,5 @@
 #pragma once
-#include "Carro.h"
-#include "Carro1.h"
-#include "Carro2.h"
-#include "Carro3.h"
-#include <vector>
-#include <ctime>
-#include <cstdlib>
-#include "CarroContexto.h"
-
-using namespace std;
+#include "CarroManager.h"
 
 namespace GameJam {
 
@@ -24,16 +15,21 @@ namespace GameJam {
         {
             InitializeComponent();
 
-            carros = new vector<Carro*>();
-            numCarros = 0;
-            maxCarros = 20;
-            tiempoParaNuevoCarro = 0;
-            srand(time(0));
+            this->SetStyle(ControlStyles::UserPaint, true);
+            this->SetStyle(ControlStyles::AllPaintingInWmPaint, true);
+            this->SetStyle(ControlStyles::DoubleBuffer, true);
+            this->UpdateStyles();
 
-            carros->push_back(new Carro1(50, 50, CarroContexto::Generador));
-            carros->push_back(new Carro2(100, 50, CarroContexto::Generador));
-            carros->push_back(new Carro3(150, 50, CarroContexto::Generador));
-            numCarros = 3;
+            maxCarros = 20;
+            int width = this->ClientSize.Width;
+            int height = this->ClientSize.Height;
+            carroManager = new CarroManager(maxCarros, width, height);
+
+            tiempoParaNuevoCarro = 0;
+            secondsCount = 0;
+
+            labelNumCarros->Text = "Carros: " + carroManager->numCarros.ToString();
+            labelSeconds->Text = "Segundos: " + secondsCount.ToString();
 
             movimientoTimer->Start();
             agregarCarroTimer->Start();
@@ -47,11 +43,10 @@ namespace GameJam {
                 delete components;
             }
 
-            for (int i = 0; i < carros->size(); i++)
-            {
-                delete (*carros)[i];
-            }
-            delete carros;
+            movimientoTimer->Stop();
+            agregarCarroTimer->Stop();
+
+            delete carroManager;
         }
 
     private:
@@ -59,40 +54,64 @@ namespace GameJam {
         Timer^ movimientoTimer;
         Timer^ agregarCarroTimer;
 
-        vector<Carro*>* carros;
-        int numCarros;
+        CarroManager* carroManager;
         int maxCarros;
         int tiempoParaNuevoCarro;
+        int secondsCount;
+
+        System::Windows::Forms::Label^ labelNumCarros;
+        System::Windows::Forms::Label^ labelSeconds;
 
         void InitializeComponent(void)
         {
             this->components = gcnew System::ComponentModel::Container();
             this->movimientoTimer = gcnew System::Windows::Forms::Timer(this->components);
             this->agregarCarroTimer = gcnew System::Windows::Forms::Timer(this->components);
+            this->labelNumCarros = gcnew System::Windows::Forms::Label();
+            this->labelSeconds = gcnew System::Windows::Forms::Label();
             this->SuspendLayout();
 
             
-            this->movimientoTimer->Interval = 30; // Milisegundos
+            this->movimientoTimer->Interval = 30;
             this->movimientoTimer->Tick += gcnew System::EventHandler(this, &GenerarCarritosForm::movimientoTimer_Tick);
 
             
-            this->agregarCarroTimer->Interval = 1000; // 1 segundo
+            this->agregarCarroTimer->Interval = 1000;
             this->agregarCarroTimer->Tick += gcnew System::EventHandler(this, &GenerarCarritosForm::agregarCarroTimer_Tick);
 
             
+            this->labelNumCarros->AutoSize = true;
+            this->labelNumCarros->Location = System::Drawing::Point(10, 10);
+            this->labelNumCarros->Name = L"labelNumCarros";
+            this->labelNumCarros->Size = System::Drawing::Size(50, 13);
+            this->labelNumCarros->TabIndex = 0;
+            this->labelNumCarros->Text = L"Carros: 0";
+
+
+            this->labelSeconds->AutoSize = true;
+            this->labelSeconds->Location = System::Drawing::Point(10, 30);
+            this->labelSeconds->Name = L"labelSeconds";
+            this->labelSeconds->Size = System::Drawing::Size(65, 13);
+            this->labelSeconds->TabIndex = 1;
+            this->labelSeconds->Text = L"Segundos: 0";
+
+
             this->ClientSize = System::Drawing::Size(800, 600);
+            this->Controls->Add(this->labelNumCarros);
+            this->Controls->Add(this->labelSeconds);
             this->Name = L"GenerarCarritosForm";
             this->Text = L"Generación Automática de Carritos";
             this->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &GenerarCarritosForm::GenerarCarritosForm_Paint);
+            this->Resize += gcnew System::EventHandler(this, &GenerarCarritosForm::GenerarCarritosForm_Resize);
             this->ResumeLayout(false);
+            this->PerformLayout();
         }
 
         void movimientoTimer_Tick(Object^ sender, EventArgs^ e)
         {
+            carroManager->MoverYVerificarCarros();
 
-            MoverYVerificarCarros();
-
-            EliminarCarros();
+            labelNumCarros->Text = "Carros: " + carroManager->numCarros.ToString();
 
             this->Invalidate();
         }
@@ -102,126 +121,36 @@ namespace GameJam {
             tiempoParaNuevoCarro++;
             if (tiempoParaNuevoCarro >= 20)
             {
-                if (numCarros < maxCarros)
-                {
-                    int tipoCarro = rand() % 3;
-                    Carro* nuevoCarro = NULL;
-                    int posX = rand() % (this->ClientSize.Width - 30);
-                    int posY = rand() % (this->ClientSize.Height - 30);
-                    if (tipoCarro == 0)
-                    {
-                        nuevoCarro = new Carro1(posX, posY, CarroContexto::Generador);
-                    }
-                    else if (tipoCarro == 1)
-                    {
-                        nuevoCarro = new Carro2(posX, posY, CarroContexto::Generador);
-                    }
-                    else if (tipoCarro == 2)
-                    {
-                        nuevoCarro = new Carro3(posX, posY, CarroContexto::Generador);
-                    }
-                    carros->push_back(nuevoCarro);
-                    numCarros++;
-                }
+                carroManager->AgregarCarroAleatorio();
                 tiempoParaNuevoCarro = 0;
             }
+
+            secondsCount++;
+            labelSeconds->Text = "Segundos: " + secondsCount.ToString();
         }
 
         void GenerarCarritosForm_Paint(Object^ sender, PaintEventArgs^ e)
         {
             Graphics^ g = e->Graphics;
 
-            for (int i = 0; i < carros->size(); i++)
+            for (int i = 0; i < carroManager->numCarros; i++)
             {
-                Carro* car = (*carros)[i];
-                Color carColor = Color::FromArgb(car->colorR, car->colorG, car->colorB);
-                SolidBrush^ brush = gcnew SolidBrush(carColor);
-                g->FillEllipse(brush, car->x, car->y, 30, 30);
-                delete brush;
-            }
-        }
-
-        void MoverYVerificarCarros()
-        {
-            for (int i = 0; i < carros->size(); i++)
-            {
-                Carro* car = (*carros)[i];
-
-                car->Mover();
-
-                if (car->x <= 0 || car->x >= this->ClientSize.Width - 30)
+                Carro* car = carroManager->carros[i];
+                if (car != NULL)
                 {
-                    car->Rebotar();
-                }
-                if (car->y <= 0 || car->y >= this->ClientSize.Height - 30)
-                {
-                    car->Rebotar();
-                }
-            }
-
-            for (int i = 0; i < carros->size(); i++)
-            {
-                Carro* carA = (*carros)[i];
-                for (int j = i + 1; j < carros->size(); j++)
-                {
-                    Carro* carB = (*carros)[j];
-                    if (carA->ChocaCon(carB))
-                    {
-                        manejarColision(carA, carB);
-                    }
+                    Color carColor = Color::FromArgb(car->colorR, car->colorG, car->colorB);
+                    SolidBrush^ brush = gcnew SolidBrush(carColor);
+                    g->FillEllipse(brush, car->x, car->y, 30, 30);
+                    delete brush;
                 }
             }
         }
 
-        void manejarColision(Carro* carA, Carro* carB)
+        void GenerarCarritosForm_Resize(Object^ sender, EventArgs^ e)
         {
-            int tipoA = carA->GetTipo();
-            int tipoB = carB->GetTipo();
-
-            if ((tipoA == 3 && tipoB == 2) || (tipoA == 2 && tipoB == 3))
-            {
-                carA->eliminado = true;
-                carB->eliminado = true;
-            }
-            else if ((tipoA == 3 && tipoB == 1) || (tipoA == 1 && tipoB == 3))
-            {
-                carA->Rebotar();
-                carB->Rebotar();
-            }
-            else if ((tipoA == 2 && tipoB == 1) || (tipoA == 1 && tipoB == 2))
-            {
-                if (numCarros < maxCarros)
-                {
-                    int posX = rand() % (this->ClientSize.Width - 30);
-                    int posY = rand() % (this->ClientSize.Height - 30);
-                    Carro* nuevoCarro = new Carro1(posX, posY, CarroContexto::Generador);
-                    carros->push_back(nuevoCarro);
-                    numCarros++;
-                }
-            }
-            else
-            {
-                carA->Rebotar();
-                carB->Rebotar();
-            }
-        }
-
-        void EliminarCarros()
-        {
-            for (auto it = carros->begin(); it != carros->end(); )
-            {
-                Carro* car = *it;
-                if (car->eliminado)
-                {
-                    delete car;
-                    it = carros->erase(it);
-                    numCarros--;
-                }
-                else
-                {
-                    ++it;
-                }
-            }
+            int width = this->ClientSize.Width;
+            int height = this->ClientSize.Height;
+            carroManager->ActualizarLimites(width, height);
         }
     };
 }

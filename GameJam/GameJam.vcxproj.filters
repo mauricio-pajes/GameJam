@@ -33,6 +33,12 @@
     <ClCompile Include="Carro3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GenerarCarritosForm.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CarroManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyForm.h">
@@ -51,6 +57,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Carro3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CarroContexto.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GenerarCarritosForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CarroManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
