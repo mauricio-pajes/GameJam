@@ -1,4 +1,3 @@
-// Carro.cpp
 #include "Carro.h"
 #include <cstdlib>
 
@@ -59,10 +58,10 @@ bool Carro::HaLlegado(int metaX)
     return x >= metaX;
 }
 
-void Carro::Rebotar()
+void Carro::Rebotar(bool invertirX, bool invertirY)
 {
-    dx = -dx;
-    dy = -dy;
+    if (invertirX) dx = -dx;
+    if (invertirY) dy = -dy;
 }
 
 bool Carro::ChocaCon(Carro* otro)
