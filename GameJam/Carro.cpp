@@ -8,14 +8,13 @@ Carro::Carro(int startX, int startY, int r, int g, int b, CarroContexto ctx)
 {
     if (contexto == CarroContexto::Generador)
     {
-        // Inicializar velocidades aleatorias para GenerarCarritosForm
         do {
-            dx = rand() % 11 - 5; // Velocidad entre -5 y 5
-        } while (dx == 0); // Evitar velocidad cero
+            dx = rand() % 11 - 5;
+        } while (dx == 0);
 
         do {
-            dy = rand() % 11 - 5; // Velocidad entre -5 y 5
-        } while (dy == 0); // Evitar velocidad cero
+            dy = rand() % 11 - 5;
+        } while (dy == 0);
     }
     else
     {
@@ -26,7 +25,6 @@ Carro::Carro(int startX, int startY, int r, int g, int b, CarroContexto ctx)
 
 Carro::~Carro()
 {
-    // Destructor vacío (no hay recursos dinámicos en la clase base)
 }
 
 string Carro::GetColorName() const
@@ -36,7 +34,7 @@ string Carro::GetColorName() const
 
 int Carro::GetTipo() const
 {
-    return 0; // Tipo base
+    return 0;
 }
 
 void Carro::Mover()
@@ -45,7 +43,7 @@ void Carro::Mover()
     {
         if (!haLlegado)
         {
-            int avance = rand() % 5 + 1; // Avanza entre 1 y 5 unidades
+            int avance = rand() % 5 + 1;
             x += avance;
         }
     }
