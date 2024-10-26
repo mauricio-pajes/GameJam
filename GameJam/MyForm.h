@@ -1,5 +1,6 @@
 #pragma once
 #include "CarreraForm.h"
+#include "GenerarCarritosForm.h"
 
 namespace GameJam {
 
@@ -9,6 +10,7 @@ namespace GameJam {
     using namespace System::Windows::Forms;
     using namespace System::Data;
     using namespace System::Drawing;
+    using namespace std;
 
     public ref class MyForm : public System::Windows::Forms::Form
     {
@@ -72,6 +74,7 @@ namespace GameJam {
             this->botonGenerarCarritos->TabIndex = 1;
             this->botonGenerarCarritos->Text = L"Generación Automática de Carritos";
             this->botonGenerarCarritos->UseVisualStyleBackColor = true;
+            this->botonGenerarCarritos->Click += gcnew System::EventHandler(this, &MyForm::botonGenerarCarritos_Click);
 
             // 
             // MyForm
@@ -84,17 +87,27 @@ namespace GameJam {
             this->Controls->Add(this->botonGenerarCarritos);
             this->Name = L"MyForm";
             this->Text = L"MyForm";
+            this->Load += gcnew System::EventHandler(this, &MyForm::MyForm_Load);
             this->ResumeLayout(false);
             this->PerformLayout();
         }
 #pragma endregion
 
     private:
+        void MyForm_Load(Object^ sender, EventArgs^ e)
+        {
+        }
+
         void botonCarrera_Click(Object^ sender, EventArgs^ e)
         {
-            // Crear una instancia del formulario CarreraForm y mostrarla
             CarreraForm^ carreraForm = gcnew CarreraForm();
             carreraForm->Show();
+        }
+
+        void botonGenerarCarritos_Click(Object^ sender, EventArgs^ e)
+        {
+            GenerarCarritosForm^ generarCarritosForm = gcnew GenerarCarritosForm();
+            generarCarritosForm->Show();
         }
     };
 }

@@ -1,7 +1,8 @@
 #include "Carro3.h"
+#include <cstdlib>
 
-Carro3::Carro3(int startX, int startY)
-    : Carro(startX, startY, 0, 0, 0), nombreColor("Desconocido")
+Carro3::Carro3(int startX, int startY, CarroContexto ctx)
+    : Carro(startX, startY, 0, 0, 0, ctx), nombreColor("Desconocido")
 {
     vector<ColorNombre> listaColores = {
         {"Rojo", 255, 0, 0},
@@ -29,4 +30,9 @@ Carro3::Carro3(int startX, int startY)
 string Carro3::GetColorName() const
 {
     return nombreColor;
+}
+
+int Carro3::GetTipo() const
+{
+    return 3;
 }

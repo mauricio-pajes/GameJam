@@ -133,6 +133,7 @@
     <ClInclude Include="Carro1.h" />
     <ClInclude Include="Carro2.h" />
     <ClInclude Include="Carro3.h" />
+    <ClInclude Include="CarroContexto.h" />
     <ClInclude Include="MyForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
