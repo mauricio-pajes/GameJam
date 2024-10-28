@@ -137,6 +137,8 @@
     <ClInclude Include="Carro3.h" />
     <ClInclude Include="CarroContexto.h" />
     <ClInclude Include="CarroManager.h" />
+    <ClInclude Include="DoubleBufferedFlowLayoutPanel.h" />
+    <ClInclude Include="DoubleBufferedTableLayoutPanel.h" />
     <ClInclude Include="GenerarCarritosForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -151,6 +153,10 @@
     <EmbeddedResource Include="MyForm.resx">
       <DependentUpon>MyForm.h</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="f1.jpg" />
+    <Image Include="f1.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
