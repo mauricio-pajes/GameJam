@@ -13,31 +13,40 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Carroh">
+      <UniqueIdentifier>{6b405e5d-c0d2-49f7-80bc-22efcd028c02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\buffer">
+      <UniqueIdentifier>{a37229e2-d2dc-4726-b563-76c3a54ac40f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\carroCpp">
+      <UniqueIdentifier>{9ef73e36-f56b-49ee-b1b9-cf7185b7d6e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyForm.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CarreraForm.cpp">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Carro.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\carroCpp</Filter>
     </ClCompile>
     <ClCompile Include="Carro1.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\carroCpp</Filter>
     </ClCompile>
     <ClCompile Include="Carro2.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\carroCpp</Filter>
     </ClCompile>
     <ClCompile Include="Carro3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GenerarCarritosForm.cpp">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\carroCpp</Filter>
     </ClCompile>
     <ClCompile Include="CarroManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\carroCpp</Filter>
+    </ClCompile>
+    <ClCompile Include="CarreraForm.cpp">
+      <Filter>Source Files\carroCpp</Filter>
+    </ClCompile>
+    <ClCompile Include="GenerarCarritosForm.cpp">
+      <Filter>Source Files\carroCpp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -47,26 +56,40 @@
     <ClInclude Include="CarreraForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Carro.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Carro1.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Carro2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Carro3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CarroContexto.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GenerarCarritosForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CarroManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Carro.h">
+      <Filter>Header Files\Carroh</Filter>
+    </ClInclude>
+    <ClInclude Include="Carro1.h">
+      <Filter>Header Files\Carroh</Filter>
+    </ClInclude>
+    <ClInclude Include="Carro2.h">
+      <Filter>Header Files\Carroh</Filter>
+    </ClInclude>
+    <ClInclude Include="Carro3.h">
+      <Filter>Header Files\Carroh</Filter>
+    </ClInclude>
+    <ClInclude Include="DoubleBufferedFlowLayoutPanel.h">
+      <Filter>Header Files\buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="DoubleBufferedTableLayoutPanel.h">
+      <Filter>Header Files\buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="CarroContexto.h">
+      <Filter>Header Files\Carroh</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="f1.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="f1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

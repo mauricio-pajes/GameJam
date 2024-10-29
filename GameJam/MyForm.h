@@ -1,4 +1,5 @@
 #pragma once
+
 #include "CarreraForm.h"
 #include "GenerarCarritosForm.h"
 #include "DoubleBufferedTableLayoutPanel.h"
@@ -185,7 +186,7 @@ namespace GameJam {
 
         void botonGenerarCarritos_Click(Object^ sender, EventArgs^ e)
         {
-            GenerarCarritosForm^ generarCarritosForm = gcnew GenerarCarritosForm();
+            FormGeneracion^ generarCarritosForm = gcnew FormGeneracion();
             generarCarritosForm->Show();
         }
     };

@@ -4,7 +4,7 @@
 Carro3::Carro3(int startX, int startY, CarroContexto ctx)
     : Carro(startX, startY, 0, 0, 0, ctx), nombreColor("Desconocido")
 {
-    vector<ColorNombre> listaColores = {
+    std::vector<ColorNombre> listaColores = {
         {"Rojo", 255, 0, 0},
         {"Verde", 0, 255, 0},
         {"Amarillo", 255, 255, 0},
@@ -27,7 +27,7 @@ Carro3::Carro3(int startX, int startY, CarroContexto ctx)
     }
 }
 
-string Carro3::GetColorName() const
+std::string Carro3::GetColorName() const
 {
     return nombreColor;
 }

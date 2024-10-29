@@ -18,6 +18,7 @@ public:
 
     Carro* carros[20];
     int numCarros;
+    bool auxRebote = false;
 
 private:
     int maxCarros;
