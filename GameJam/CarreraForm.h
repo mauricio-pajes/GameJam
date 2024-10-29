@@ -82,7 +82,7 @@ namespace GameJam {
 
             if (fuentesPersonalizadas->Families->Length > 0)
             {
-                this->etiquetaCronometro->Font = gcnew System::Drawing::Font(fuentesPersonalizadas->Families[0], 12);
+                this->etiquetaCronometro->Font = gcnew System::Drawing::Font(fuentesPersonalizadas->Families[0], 18);
                 this->etiquetaResultado1->Font = gcnew System::Drawing::Font(fuentesPersonalizadas->Families[0], 12);
                 this->etiquetaResultado2->Font = gcnew System::Drawing::Font(fuentesPersonalizadas->Families[0], 12);
                 this->etiquetaResultado3->Font = gcnew System::Drawing::Font(fuentesPersonalizadas->Families[0], 12);
