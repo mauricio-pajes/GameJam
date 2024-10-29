@@ -12,9 +12,9 @@
 //using namespace std;
 
 
+
 namespace GameJam {
 
-    
     using namespace System;
     using namespace System::ComponentModel;
     using namespace System::Collections;
@@ -28,6 +28,7 @@ namespace GameJam {
         CarreraForm(void)
         {
             InitializeComponent();
+            CargarFuentePersonalizada();
 
             this->SetStyle(ControlStyles::UserPaint, true);
             this->SetStyle(ControlStyles::AllPaintingInWmPaint, true);
@@ -39,7 +40,6 @@ namespace GameJam {
             carreraEnCurso = true;
             totalCarrosLlegados = 0;
             metaX = this->ClientSize.Width - 100;
-
 
             carros->push_back(new Carro1(50, 100, CarroContexto::Carrera));
             carros->push_back(new Carro2(50, 300, CarroContexto::Carrera));
@@ -65,7 +65,6 @@ namespace GameJam {
         }
 
     private:
-
         System::ComponentModel::Container^ components;
         Label^ etiquetaCronometro;
         Timer^ cronometroTimer;
@@ -74,13 +73,29 @@ namespace GameJam {
         Label^ etiquetaResultado3;
         Button^ botonReiniciar;
 
+        System::Drawing::Text::PrivateFontCollection^ fuentesPersonalizadas;
+
+        void CargarFuentePersonalizada()
+        {
+            fuentesPersonalizadas = gcnew System::Drawing::Text::PrivateFontCollection();
+            fuentesPersonalizadas->AddFontFile("KarmaFuture.ttf");
+
+            if (fuentesPersonalizadas->Families->Length > 0)
+            {
+                this->etiquetaCronometro->Font = gcnew System::Drawing::Font(fuentesPersonalizadas->Families[0], 12);
+                this->etiquetaResultado1->Font = gcnew System::Drawing::Font(fuentesPersonalizadas->Families[0], 12);
+                this->etiquetaResultado2->Font = gcnew System::Drawing::Font(fuentesPersonalizadas->Families[0], 12);
+                this->etiquetaResultado3->Font = gcnew System::Drawing::Font(fuentesPersonalizadas->Families[0], 12);
+                this->botonReiniciar->Font = gcnew System::Drawing::Font(fuentesPersonalizadas->Families[0], 16);
+            }
+        }
+
         double segundos;
         std::vector<Carro*>* carros;
         std::vector<Carro*>* ordenLlegada;
         bool carreraEnCurso;
         int totalCarrosLlegados;
         int metaX;
-
 
         void InitializeComponent(void)
         {
@@ -92,25 +107,21 @@ namespace GameJam {
             this->botonReiniciar = (gcnew System::Windows::Forms::Button());
             this->SuspendLayout();
 
-            
             this->etiquetaCronometro->AutoSize = true;
-            this->etiquetaCronometro->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 16));
+            this->etiquetaCronometro->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12));
             this->etiquetaCronometro->Location = System::Drawing::Point(10, 10);
             this->etiquetaCronometro->Name = L"etiquetaCronometro";
             this->etiquetaCronometro->Size = System::Drawing::Size(70, 25);
             this->etiquetaCronometro->TabIndex = 0;
             this->etiquetaCronometro->Text = L"00.00";
 
-
             this->etiquetaResultado1->AutoSize = true;
             this->etiquetaResultado1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12));
             this->etiquetaResultado1->Location = System::Drawing::Point(10, 50);
-            
             this->etiquetaResultado1->Name = L"etiquetaResultado1";
             this->etiquetaResultado1->Size = System::Drawing::Size(0, 20);
             this->etiquetaResultado1->TabIndex = 1;
             this->etiquetaResultado1->Text = L"";
-
 
             this->etiquetaResultado2->AutoSize = true;
             this->etiquetaResultado2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12));
@@ -120,7 +131,6 @@ namespace GameJam {
             this->etiquetaResultado2->TabIndex = 2;
             this->etiquetaResultado2->Text = L"";
 
-
             this->etiquetaResultado3->AutoSize = true;
             this->etiquetaResultado3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12));
             this->etiquetaResultado3->Location = System::Drawing::Point(10, 110);
@@ -129,39 +139,42 @@ namespace GameJam {
             this->etiquetaResultado3->TabIndex = 3;
             this->etiquetaResultado3->Text = L"";
 
-
-            this->botonReiniciar->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12));
+            this->botonReiniciar->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 16));
             this->botonReiniciar->Location = System::Drawing::Point(700, 10);
             this->botonReiniciar->Name = L"botonReiniciar";
-            this->botonReiniciar->Size = System::Drawing::Size(90, 30);
+            this->botonReiniciar->Size = System::Drawing::Size(150, 50);
             this->botonReiniciar->TabIndex = 4;
             this->botonReiniciar->Text = L"Reiniciar";
-            this->botonReiniciar->UseVisualStyleBackColor = true;
+            this->botonReiniciar->UseVisualStyleBackColor = false;
+            this->botonReiniciar->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+            this->botonReiniciar->FlatAppearance->BorderSize = 2;
+            this->botonReiniciar->FlatAppearance->BorderColor = System::Drawing::Color::Black;
+            this->botonReiniciar->BackColor = System::Drawing::Color::FromArgb(200, 255, 255, 255);
             this->botonReiniciar->Click += gcnew System::EventHandler(this, &CarreraForm::botonReiniciar_Click);
 
-           
-            this->cronometroTimer->Interval = 10; // 10 ms para 0.01 segundos
+            this->cronometroTimer->Interval = 10;
             this->cronometroTimer->Tick += gcnew System::EventHandler(this, &CarreraForm::cronometroTimer_Tick);
-
 
             this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
             this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
             this->ClientSize = System::Drawing::Size(800, 400);
-            
+
             this->Controls->Add(this->botonReiniciar);
             this->Controls->Add(this->etiquetaResultado3);
             this->Controls->Add(this->etiquetaResultado2);
             this->Controls->Add(this->etiquetaResultado1);
             this->Controls->Add(this->etiquetaCronometro);
-            
+
             this->Name = L"CarreraForm";
-            this->Size = System::Drawing::Size(1200,800);
+            this->Size = System::Drawing::Size(1200, 800);
             this->Text = L"Carrera de Autos";
             this->Load += gcnew System::EventHandler(this, &CarreraForm::CarreraForm_Load);
             this->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &CarreraForm::CarreraForm_Paint);
             this->ResumeLayout(false);
             this->PerformLayout();
         }
+
+
 
 
         void CarreraForm_Load(Object^ sender, EventArgs^ e)
@@ -188,10 +201,19 @@ namespace GameJam {
             etiquetaResultado3->Text = "";
 
             metaX = this->ClientSize.Width - 100;
+            int numCarros = 3;
+            int espacioVertical = (this->ClientSize.Height - 100) / (numCarros + 1);
 
-            carros->push_back(new Carro1(50, 100, CarroContexto::Carrera));
-            carros->push_back(new Carro2(50, 300, CarroContexto::Carrera));
-            carros->push_back(new Carro3(50, 500, CarroContexto::Carrera));
+            for (int i = 0; i < numCarros; i++)
+            {
+                int posicionY = (i + 1) * espacioVertical;
+                if (i == 0)
+                    carros->push_back(new Carro1(50, posicionY, CarroContexto::Carrera));
+                else if (i == 1)
+                    carros->push_back(new Carro2(50, posicionY, CarroContexto::Carrera));
+                else if (i == 2)
+                    carros->push_back(new Carro3(50, posicionY, CarroContexto::Carrera));
+            }
 
             cronometroTimer->Start();
             this->Invalidate();
@@ -264,9 +286,19 @@ namespace GameJam {
         void CarreraForm_Paint(Object^ sender, PaintEventArgs^ e)
         {
             Graphics^ g = e->Graphics;
-            Pen^ penMeta = gcnew Pen(Color::Black, 3);
-            g->DrawLine(penMeta, metaX, 0, metaX, this->ClientSize.Height);
-            delete penMeta;
+
+            int squareSize = 14;
+            int metaWidth = 80;
+
+            for (int x = metaX; x < metaX + metaWidth; x += squareSize)
+            {
+                for (int y = 0; y < this->ClientSize.Height; y += squareSize)
+                {
+                    Brush^ brush = ((x / squareSize) + (y / squareSize)) % 2 == 0 ? Brushes::White : Brushes::Black;
+                    g->FillRectangle(brush, x, y, squareSize, squareSize);
+                }
+            }
+
             for (int i = 0; i < carros->size(); i++)
             {
 
@@ -344,16 +376,15 @@ namespace GameJam {
 
                     g->FillRectangle(colorCarro, car->x + 0 * pixelSize, car->y + 19 * pixelSize, 17 * pixelSize, 9 * pixelSize);
 
-                    //izquierda LISTO ------------
                     g->FillEllipse(blanco, car->x + 20, car->y + 80, 13 * pixelSize, 13 * pixelSize);
                     g->FillEllipse(negro, car->x + 24, car->y + 84, 11 * pixelSize, 11 * pixelSize);
                     g->FillEllipse(blanco, car->x + 38, car->y + 98, 4 * pixelSize, 4 * pixelSize);
-                    //derechga LISTO ------------
+                    
                     g->FillEllipse(blanco, car->x + 126, car->y + 80, 13 * pixelSize, 13 * pixelSize);
                     g->FillEllipse(negro, car->x + 130, car->y + 84, 11 * pixelSize, 11 * pixelSize);
                     g->FillEllipse(blanco, car->x + 144, car->y + 98, 4 * pixelSize, 4 * pixelSize);
 
-                    // Botón 
+
                     g->FillRectangle(blanco, car->x + (anchoTotal - 31) * pixelSize, car->y + 15 * pixelSize, 1 * pixelSize, 1 * pixelSize);
 
             }

@@ -154,7 +154,6 @@ void CarroManager::AgregarCarroAleatorio()
 
 void CarroManager::EliminarCarros()
 {
-    // Ordenar los índices en orden descendente para eliminar sin afectar los índices
     for (int i = 0; i < numCarrosAEliminar - 1; i++)
     {
         for (int j = i + 1; j < numCarrosAEliminar; j++)
@@ -174,16 +173,15 @@ void CarroManager::EliminarCarros()
         if (indice >= 0 && indice < numCarros)
         {
             delete carros[indice];
-            // Desplazar los carros para llenar el hueco
             for (int j = indice; j < numCarros - 1; j++)
             {
                 carros[j] = carros[j + 1];
             }
-            carros[numCarros - 1] = NULL; // Establecer el último elemento a NULL
+            carros[numCarros - 1] = NULL;
             numCarros--;
         }
     }
-    numCarrosAEliminar = 0; // Reiniciar después de eliminación
+    numCarrosAEliminar = 0;
 }
 
 void CarroManager::AgregarNuevosCarros()
@@ -193,7 +191,7 @@ void CarroManager::AgregarNuevosCarros()
         carros[numCarros++] = carrosAAgregar[i];
         carrosAAgregar[i] = NULL;
     }
-    numCarrosAAgregar = 0; // Reiniciar después de agregar
+    numCarrosAAgregar = 0;
 }
 
 bool CarroManager::posicionValida(int posX, int posY)
@@ -220,7 +218,6 @@ void CarroManager::ActualizarLimites(int width, int height)
     this->height = height;
 }
 
-// Métodos auxiliares para verificar movimiento en X e Y
 bool CarroManager::EstaMoviendoseEnX(Carro* carro) const
 {
     return carro->dx != 0;

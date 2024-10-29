@@ -10,15 +10,14 @@ namespace GameJam {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
-	/// <summary>
-	/// Resumen de FormGeneracion
-	/// </summary>
 	public ref class FormGeneracion : public System::Windows::Forms::Form
 	{
 	public:
 		FormGeneracion(void)
 		{
 			InitializeComponent();
+			CargarFuentePersonalizada();
+
 			this->SetStyle(ControlStyles::UserPaint, true);
 			this->SetStyle(ControlStyles::AllPaintingInWmPaint, true);
 			this->SetStyle(ControlStyles::DoubleBuffer, true);
@@ -40,14 +39,10 @@ namespace GameJam {
 		}
 
 	protected:
-		/// <summary>
-		/// Limpiar los recursos que se estén usando.
-		/// </summary>
 		~FormGeneracion()
 		{
 			if (components)
 			{
-
 				delete components;
 			}
 			movimientoTimer->Stop();
@@ -57,7 +52,6 @@ namespace GameJam {
 		}
 
 	private:
-
 		System::ComponentModel::Container^ components;
 		Timer^ movimientoTimer;
 		Timer^ agregarCarroTimer;
@@ -69,15 +63,12 @@ namespace GameJam {
 
 		System::Windows::Forms::Label^ labelNumCarros;
 		System::Windows::Forms::Label^ labelSeconds;
+		System::Drawing::Text::PrivateFontCollection^ fuentesPersonalizadas;
 
 #pragma region Windows Form Designer generated code
-
 		void InitializeComponent(void)
 		{
 			this->SuspendLayout();
-			// 
-			// FormGeneracion
-			// 
 			this->components = gcnew System::ComponentModel::Container();
 			this->movimientoTimer = gcnew System::Windows::Forms::Timer(this->components);
 			this->agregarCarroTimer = gcnew System::Windows::Forms::Timer(this->components);
@@ -85,14 +76,11 @@ namespace GameJam {
 			this->labelSeconds = gcnew System::Windows::Forms::Label();
 			this->SuspendLayout();
 
-
 			this->movimientoTimer->Interval = 30;
 			this->movimientoTimer->Tick += gcnew System::EventHandler(this, &FormGeneracion::movimientoTimer_Tick);
 
-
 			this->agregarCarroTimer->Interval = 1000;
 			this->agregarCarroTimer->Tick += gcnew System::EventHandler(this, &FormGeneracion::agregarCarroTimer_Tick);
-
 
 			this->labelNumCarros->AutoSize = true;
 			this->labelNumCarros->Location = System::Drawing::Point(10, 10);
@@ -101,14 +89,12 @@ namespace GameJam {
 			this->labelNumCarros->TabIndex = 0;
 			this->labelNumCarros->Text = L"Carros: 0";
 
-
 			this->labelSeconds->AutoSize = true;
-			this->labelSeconds->Location = System::Drawing::Point(10, 30);
+			this->labelSeconds->Location = System::Drawing::Point(10, 40);
 			this->labelSeconds->Name = L"labelSeconds";
 			this->labelSeconds->Size = System::Drawing::Size(65, 13);
 			this->labelSeconds->TabIndex = 1;
 			this->labelSeconds->Text = L"Segundos: 0";
-
 
 			this->ClientSize = System::Drawing::Size(800, 600);
 			this->Controls->Add(this->labelNumCarros);
@@ -119,9 +105,20 @@ namespace GameJam {
 			this->Resize += gcnew System::EventHandler(this, &FormGeneracion::GenerarCarritosForm_Resize);
 			this->ResumeLayout(false);
 			this->PerformLayout();
-
 		}
 #pragma endregion
+
+		void CargarFuentePersonalizada()
+		{
+			fuentesPersonalizadas = gcnew System::Drawing::Text::PrivateFontCollection();
+			fuentesPersonalizadas->AddFontFile("KarmaFuture.ttf");
+
+			if (fuentesPersonalizadas->Families->Length > 0)
+			{
+				this->labelNumCarros->Font = gcnew System::Drawing::Font(fuentesPersonalizadas->Families[0], 12);
+				this->labelSeconds->Font = gcnew System::Drawing::Font(fuentesPersonalizadas->Families[0], 12);
+			}
+		}
 
 
 		void movimientoTimer_Tick(Object^ sender, EventArgs^ e)
@@ -229,16 +226,13 @@ namespace GameJam {
 
 					g->FillRectangle(colorCarro, car->x + 0 * pixelSize, car->y + 19 * pixelSize, 17 * pixelSize, 9 * pixelSize);
 
-					//izquierda LISTO ------------
 					g->FillEllipse(blanco, car->x + 20, car->y + 80, 13 * pixelSize, 13 * pixelSize);
 					g->FillEllipse(negro, car->x + 24, car->y + 84, 11 * pixelSize, 11 * pixelSize);
 					g->FillEllipse(blanco, car->x + 38, car->y + 98, 4 * pixelSize, 4 * pixelSize);
-					//derechga LISTO ------------
 					g->FillEllipse(blanco, car->x + 126, car->y + 80, 13 * pixelSize, 13 * pixelSize);
 					g->FillEllipse(negro, car->x + 130, car->y + 84, 11 * pixelSize, 11 * pixelSize);
 					g->FillEllipse(blanco, car->x + 144, car->y + 98, 4 * pixelSize, 4 * pixelSize);
 
-					// Botón 
 					g->FillRectangle(blanco, car->x + (anchoTotal - 31) * pixelSize, car->y + 15 * pixelSize, 1 * pixelSize, 1 * pixelSize);
 
 				}
