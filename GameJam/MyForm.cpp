@@ -4,6 +4,7 @@ using namespace System;
 using namespace GameJam;
 
 int main() {
-	Application::Run(gcnew MyForm());
+
+	Application::Run(gcnew GameJam::MyForm());
 	return 0;
 }

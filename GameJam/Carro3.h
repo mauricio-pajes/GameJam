@@ -3,10 +3,10 @@
 #include <vector>
 #include <string>
 
-using namespace std;
+//using namespace std;
 
 struct ColorNombre {
-    string nombre;
+    std::string nombre;
     int r;
     int g;
     int b;
@@ -15,8 +15,8 @@ struct ColorNombre {
 class Carro3 : public Carro
 {
 public:
-    string nombreColor;
+    std::string nombreColor;
     Carro3(int startX, int startY, CarroContexto ctx);
-    virtual string GetColorName() const override;
+    virtual std::string GetColorName() const override;
     virtual int GetTipo() const override;
 };

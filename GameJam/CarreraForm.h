@@ -4,16 +4,22 @@
 #include "Carro2.h"
 #include "Carro3.h"
 #include <vector>
+
 #include <ctime>
 #include <cstdlib>
 #include "CarroContexto.h"
 
-using namespace std;
+//using namespace std;
+
 
 namespace GameJam {
 
+    
     using namespace System;
+    using namespace System::ComponentModel;
+    using namespace System::Collections;
     using namespace System::Windows::Forms;
+    using namespace System::Data;
     using namespace System::Drawing;
 
     public ref class CarreraForm : public Form
@@ -28,15 +34,16 @@ namespace GameJam {
             this->SetStyle(ControlStyles::DoubleBuffer, true);
             this->UpdateStyles();
 
-            carros = new vector<Carro*>();
-            ordenLlegada = new vector<Carro*>();
+            carros = new std::vector<Carro*>();
+            ordenLlegada = new std::vector<Carro*>();
             carreraEnCurso = true;
             totalCarrosLlegados = 0;
             metaX = this->ClientSize.Width - 100;
 
+
             carros->push_back(new Carro1(50, 100, CarroContexto::Carrera));
-            carros->push_back(new Carro2(50, 150, CarroContexto::Carrera));
-            carros->push_back(new Carro3(50, 200, CarroContexto::Carrera));
+            carros->push_back(new Carro2(50, 300, CarroContexto::Carrera));
+            carros->push_back(new Carro3(50, 500, CarroContexto::Carrera));
 
             cronometroTimer->Start();
         }
@@ -58,6 +65,7 @@ namespace GameJam {
         }
 
     private:
+
         System::ComponentModel::Container^ components;
         Label^ etiquetaCronometro;
         Timer^ cronometroTimer;
@@ -67,11 +75,12 @@ namespace GameJam {
         Button^ botonReiniciar;
 
         double segundos;
-        vector<Carro*>* carros;
-        vector<Carro*>* ordenLlegada;
+        std::vector<Carro*>* carros;
+        std::vector<Carro*>* ordenLlegada;
         bool carreraEnCurso;
         int totalCarrosLlegados;
         int metaX;
+
 
         void InitializeComponent(void)
         {
@@ -96,6 +105,7 @@ namespace GameJam {
             this->etiquetaResultado1->AutoSize = true;
             this->etiquetaResultado1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12));
             this->etiquetaResultado1->Location = System::Drawing::Point(10, 50);
+            
             this->etiquetaResultado1->Name = L"etiquetaResultado1";
             this->etiquetaResultado1->Size = System::Drawing::Size(0, 20);
             this->etiquetaResultado1->TabIndex = 1;
@@ -137,12 +147,15 @@ namespace GameJam {
             this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
             this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
             this->ClientSize = System::Drawing::Size(800, 400);
+            
             this->Controls->Add(this->botonReiniciar);
             this->Controls->Add(this->etiquetaResultado3);
             this->Controls->Add(this->etiquetaResultado2);
             this->Controls->Add(this->etiquetaResultado1);
             this->Controls->Add(this->etiquetaCronometro);
+            
             this->Name = L"CarreraForm";
+            this->Size = System::Drawing::Size(1200,800);
             this->Text = L"Carrera de Autos";
             this->Load += gcnew System::EventHandler(this, &CarreraForm::CarreraForm_Load);
             this->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &CarreraForm::CarreraForm_Paint);
@@ -150,13 +163,14 @@ namespace GameJam {
             this->PerformLayout();
         }
 
+
         void CarreraForm_Load(Object^ sender, EventArgs^ e)
         {
         }
 
         void IniciarCarrera()
         {
-            srand(time(0));
+
             segundos = 0.0;
             etiquetaCronometro->Text = "00.00";
             carreraEnCurso = true;
@@ -176,8 +190,8 @@ namespace GameJam {
             metaX = this->ClientSize.Width - 100;
 
             carros->push_back(new Carro1(50, 100, CarroContexto::Carrera));
-            carros->push_back(new Carro2(50, 150, CarroContexto::Carrera));
-            carros->push_back(new Carro3(50, 200, CarroContexto::Carrera));
+            carros->push_back(new Carro2(50, 300, CarroContexto::Carrera));
+            carros->push_back(new Carro3(50, 500, CarroContexto::Carrera));
 
             cronometroTimer->Start();
             this->Invalidate();
@@ -247,22 +261,103 @@ namespace GameJam {
         {
             IniciarCarrera();
         }
-
         void CarreraForm_Paint(Object^ sender, PaintEventArgs^ e)
         {
             Graphics^ g = e->Graphics;
             Pen^ penMeta = gcnew Pen(Color::Black, 3);
             g->DrawLine(penMeta, metaX, 0, metaX, this->ClientSize.Height);
             delete penMeta;
-
             for (int i = 0; i < carros->size(); i++)
             {
+
                 Carro* car = (*carros)[i];
-                Color carColor = Color::FromArgb(car->colorR, car->colorG, car->colorB);
-                SolidBrush^ brush = gcnew SolidBrush(carColor);
+                Color carColor2 = Color::FromArgb(0,car->colorR, car->colorG, car->colorB);
+                SolidBrush^ brush = gcnew SolidBrush(carColor2);
                 g->FillEllipse(brush, car->x, car->y, 30, 30);
                 delete brush;
+                int pixelSize = 4;
+
+                    Color carColor = Color::FromArgb(car->colorR, car->colorG, car->colorB);
+                    int anchoTotal = 50;
+                    Brush^ colorCarro = gcnew SolidBrush(carColor);
+                    Brush^ negro = gcnew SolidBrush(Color::FromArgb(0, 0, 0));
+                    Brush^ blanco = gcnew SolidBrush(Color::FromArgb(255, 255, 255));
+
+                    array<Point>^ segmento3 = {
+                        Point(car->x + (anchoTotal - 16) * pixelSize, car->y + 0 * pixelSize),
+                        Point(car->x + (anchoTotal - 23) * pixelSize, car->y + 0 * pixelSize),
+                        Point(car->x + (anchoTotal - 23) * pixelSize, car->y + 4 * pixelSize),
+                        Point(car->x + (anchoTotal - 14) * pixelSize, car->y + 4 * pixelSize)
+                    };
+
+                    array<Point>^ segmento2 = {
+                        Point(car->x + (anchoTotal - 45) * pixelSize, car->y + 0 * pixelSize),
+                        Point(car->x + (anchoTotal - 48) * pixelSize, car->y + 0 * pixelSize),
+                        Point(car->x + (anchoTotal - 50) * pixelSize, car->y + 13 * pixelSize),
+                        Point(car->x + (anchoTotal - 47) * pixelSize, car->y + 13 * pixelSize)
+                    };
+
+                    array<Point>^ segmento1 = {
+                        Point(car->x + (anchoTotal - 11) * pixelSize, car->y + 0 * pixelSize),
+                        Point(car->x + (anchoTotal - 15) * pixelSize, car->y + 0 * pixelSize),
+                        Point(car->x + (anchoTotal - 12) * pixelSize, car->y + 6 * pixelSize),
+                        Point(car->x + (anchoTotal - 9) * pixelSize, car->y + 4 * pixelSize)
+                    };
+
+                    array<Point>^ segmento4 = {
+                        Point(car->x + (anchoTotal - 8) * pixelSize, car->y + 5 * pixelSize),
+                        Point(car->x + (anchoTotal - 11) * pixelSize, car->y + 7 * pixelSize),
+                        Point(car->x + (anchoTotal - 9) * pixelSize, car->y + 11 * pixelSize),
+                        Point(car->x + (anchoTotal - 6) * pixelSize, car->y + 9 * pixelSize)
+                    };
+
+                    array<Point>^ segmento5 = {
+                        Point(car->x + (anchoTotal - 6) * pixelSize, car->y + 10 * pixelSize),
+                        Point(car->x + (anchoTotal - 9) * pixelSize, car->y + 12 * pixelSize),
+                        Point(car->x + (anchoTotal - 8) * pixelSize, car->y + 13 * pixelSize),
+                        Point(car->x + (anchoTotal - 4) * pixelSize, car->y + 13 * pixelSize)
+                    };
+
+                    g->FillPolygon(colorCarro, segmento1);
+                    g->FillPolygon(colorCarro, segmento2);
+                    g->FillPolygon(colorCarro, segmento3);
+                    g->FillPolygon(colorCarro, segmento4);
+                    g->FillPolygon(colorCarro, segmento5);
+
+                    g->FillRectangle(colorCarro, car->x + (anchoTotal - 44) * pixelSize, car->y + 0 * pixelSize, 4 * pixelSize, 4 * pixelSize);
+                    g->FillRectangle(colorCarro, car->x + (anchoTotal - 39) * pixelSize, car->y + 0 * pixelSize, 11 * pixelSize, 4 * pixelSize);
+
+                    g->FillRectangle(colorCarro, car->x + (anchoTotal - 27) * pixelSize, car->y + 0 * pixelSize, 3 * pixelSize, 13 * pixelSize);
+                    g->FillRectangle(colorCarro, car->x + (anchoTotal - 27) * pixelSize, car->y + 14 * pixelSize, 3 * pixelSize, 9 * pixelSize);
+                    g->FillRectangle(colorCarro, car->x + 10 * pixelSize, car->y + 24 * pixelSize, 38 * pixelSize, 4 * pixelSize);
+                    g->FillRectangle(colorCarro, car->x + 28 * pixelSize, car->y + 19 * pixelSize, 20 * pixelSize, 4 * pixelSize);
+                    g->FillRectangle(colorCarro, car->x + (anchoTotal - 35) * pixelSize, car->y + 14 * pixelSize, 7 * pixelSize, 4 * pixelSize);
+                    g->FillRectangle(colorCarro, car->x + (anchoTotal - 39) * pixelSize, car->y + 14 * pixelSize, 5 * pixelSize, 4 * pixelSize);
+                    g->FillRectangle(colorCarro, car->x + (anchoTotal - 43) * pixelSize, car->y + 14 * pixelSize, 3 * pixelSize, 4 * pixelSize);
+                    g->FillRectangle(colorCarro, car->x + 0 * pixelSize, car->y + 14 * pixelSize, 6 * pixelSize, 4 * pixelSize);
+                    g->FillRectangle(colorCarro, car->x + (anchoTotal - 7) * pixelSize, car->y + 14 * pixelSize, 5 * pixelSize, 4 * pixelSize);
+                    g->FillRectangle(colorCarro, car->x + (anchoTotal - 13) * pixelSize, car->y + 14 * pixelSize, 3 * pixelSize, 4 * pixelSize);
+                    g->FillRectangle(colorCarro, car->x + (anchoTotal - 17) * pixelSize, car->y + 14 * pixelSize, 4 * pixelSize, 4 * pixelSize);
+                    g->FillRectangle(colorCarro, car->x + (anchoTotal - 22) * pixelSize, car->y + 14 * pixelSize, 4 * pixelSize, 4 * pixelSize);
+                    g->FillRectangle(colorCarro, car->x + (anchoTotal - 32) * pixelSize, car->y + 19 * pixelSize, 4 * pixelSize, 4 * pixelSize);
+
+
+                    g->FillRectangle(colorCarro, car->x + 0 * pixelSize, car->y + 19 * pixelSize, 17 * pixelSize, 9 * pixelSize);
+
+                    //izquierda LISTO ------------
+                    g->FillEllipse(blanco, car->x + 20, car->y + 80, 13 * pixelSize, 13 * pixelSize);
+                    g->FillEllipse(negro, car->x + 24, car->y + 84, 11 * pixelSize, 11 * pixelSize);
+                    g->FillEllipse(blanco, car->x + 38, car->y + 98, 4 * pixelSize, 4 * pixelSize);
+                    //derechga LISTO ------------
+                    g->FillEllipse(blanco, car->x + 126, car->y + 80, 13 * pixelSize, 13 * pixelSize);
+                    g->FillEllipse(negro, car->x + 130, car->y + 84, 11 * pixelSize, 11 * pixelSize);
+                    g->FillEllipse(blanco, car->x + 144, car->y + 98, 4 * pixelSize, 4 * pixelSize);
+
+                    // Botón 
+                    g->FillRectangle(blanco, car->x + (anchoTotal - 31) * pixelSize, car->y + 15 * pixelSize, 1 * pixelSize, 1 * pixelSize);
+
             }
         }
     };
 }
+

@@ -5,7 +5,7 @@ Carro2::Carro2(int startX, int startY, CarroContexto ctx)
 {
 }
 
-string Carro2::GetColorName() const
+std::string Carro2::GetColorName() const
 {
     return "Azul";
 }

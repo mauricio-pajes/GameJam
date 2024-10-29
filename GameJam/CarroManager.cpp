@@ -15,8 +15,8 @@ CarroManager::CarroManager(int maxCarros, int width, int height)
 
     srand(time(0));
     carros[numCarros++] = new Carro1(50, 50, CarroContexto::Generador);
-    carros[numCarros++] = new Carro2(100, 50, CarroContexto::Generador);
-    carros[numCarros++] = new Carro3(150, 50, CarroContexto::Generador);
+    carros[numCarros++] = new Carro2(110, 420, CarroContexto::Generador);
+    carros[numCarros++] = new Carro3(500, 450, CarroContexto::Generador);
 }
 
 CarroManager::~CarroManager()
@@ -34,11 +34,11 @@ void CarroManager::MoverYVerificarCarros()
         Carro* car = carros[i];
         car->Mover();
 
-        if (car->x <= 0 || car->x >= width - 30)
+        if (car->x <= 0 || car->x >= width - 180)
         {
             car->Rebotar(true, false);
         }
-        if (car->y <= 0 || car->y >= height - 30)
+        if (car->y <= 0 || car->y >= height - 120)
         {
             car->Rebotar(false, true);
         }
@@ -65,7 +65,7 @@ void CarroManager::manejarColision(Carro* carA, Carro* carB, int indiceA, int in
 {
     int tipoA = carA->GetTipo();
     int tipoB = carB->GetTipo();
-
+    bool colisionado = false;
     if ((tipoA == 3 && tipoB == 2) || (tipoA == 2 && tipoB == 3))
     {
         carrosAEliminarIndices[numCarrosAEliminar++] = indiceA;
@@ -76,8 +76,9 @@ void CarroManager::manejarColision(Carro* carA, Carro* carB, int indiceA, int in
         carA->Rebotar(true, true);
         carB->Rebotar(true, true);
     }
-    else if ((tipoA == 1 && tipoB == 2) || (tipoA == 2 && tipoB == 1))
+    else if (!colisionado && (tipoA == 1 && tipoB == 2) || (tipoA == 2 && tipoB == 1))
     {
+        colisionado = true;
         if (numCarros + numCarrosAAgregar < maxCarros)
         {
             int posX, posY;
@@ -89,7 +90,9 @@ void CarroManager::manejarColision(Carro* carA, Carro* carB, int indiceA, int in
             Carro* nuevoCarro = new Carro1(posX, posY, CarroContexto::Generador);
             carrosAAgregar[numCarrosAAgregar++] = nuevoCarro;
         }
-
+            carA->Rebotar(true,true);
+            carB->Rebotar(true, true);
+        /*
         if (EstaMoviendoseEnX(carA) == EstaMoviendoseEnX(carB))
         {
             carA->Rebotar(true, false);
@@ -100,10 +103,14 @@ void CarroManager::manejarColision(Carro* carA, Carro* carB, int indiceA, int in
             carA->Rebotar(false, true);
             carB->Rebotar(false, true);
         }
+        */
+        colisionado = false;
     }
     else
     {
-        if (EstaMoviendoseEnX(carA) == EstaMoviendoseEnX(carB))
+        carA->Rebotar(true, true);
+        carB->Rebotar(true, true);
+       /* if (EstaMoviendoseEnX(carA) == EstaMoviendoseEnX(carB))
         {
             carA->Rebotar(true, false);
             carB->Rebotar(true, false);
@@ -113,6 +120,7 @@ void CarroManager::manejarColision(Carro* carA, Carro* carB, int indiceA, int in
             carA->Rebotar(false, true);
             carB->Rebotar(false, true);
         }
+        */
     }
 }
 
@@ -196,9 +204,12 @@ bool CarroManager::posicionValida(int posX, int posY)
         int distanciaX = posX - car->x;
         int distanciaY = posY - car->y;
         int distanciaCuadrada = distanciaX * distanciaX + distanciaY * distanciaY;
-        int radioSumado = 15 + 15;
-        if (distanciaCuadrada <= radioSumado * radioSumado)
-            return false; // Hay colisión
+        int radioSumadoX = 180;
+        int radioSumadoY = 120;
+        if ((distanciaX * distanciaX <= radioSumadoX * radioSumadoX) &&
+            (distanciaY * distanciaY <= radioSumadoY * radioSumadoY)) {
+            return false; 
+        }
     }
     return true;
 }

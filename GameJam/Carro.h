@@ -2,7 +2,7 @@
 #include <string>
 #include "CarroContexto.h"
 
-using namespace std;
+//using namespace std;
 
 class Carro
 {
@@ -27,7 +27,7 @@ public:
 
     virtual ~Carro();
 
-    virtual string GetColorName() const;
+    virtual std::string GetColorName() const;
     virtual int GetTipo() const;
 
     void Mover();
@@ -35,4 +35,5 @@ public:
     bool HaLlegado(int metaX);
     void Rebotar(bool invertirX, bool invertirY);
     bool ChocaCon(Carro* otro);
+
 };

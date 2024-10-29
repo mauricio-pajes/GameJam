@@ -26,7 +26,7 @@ Carro::~Carro()
 {
 }
 
-string Carro::GetColorName() const
+std::string Carro::GetColorName() const
 {
     return "Desconocido";
 }
@@ -69,6 +69,8 @@ bool Carro::ChocaCon(Carro* otro)
     int distanciaX = x - otro->x;
     int distanciaY = y - otro->y;
     int distanciaCuadrada = distanciaX * distanciaX + distanciaY * distanciaY;
-    int radioSumado = 15 + 15;
-    return distanciaCuadrada <= radioSumado * radioSumado;
+    int radioSumadoX = 180;
+    int radioSumadoY = 120;
+    return (distanciaX * distanciaX <= radioSumadoX * radioSumadoX) &&
+        (distanciaY * distanciaY <= radioSumadoY * radioSumadoY);
 }
